@@ -1,18 +1,19 @@
-version: '3' 
-services: 
-  zookeeper: 
-    image: confluentinc/cp-zookeeper:7.4.4 
-    environment: 
-      ZOOKEEPER_CLIENT_PORT: 2181 
-      ZOOKEEPER_TICK_TIME: 2000 
-    ports: 
-      - 2181:2181 
-  kafka: 
-    image: confluentinc/cp-kafka:7.4.4 
-    depends_on: 
-      - zookeeper 
-    ports: 
-      - 9092:9092 
+version: '3'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.4
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 2181:2181
+
+  kafka:
+    image: confluentinc/cp-kafka:7.4.4
+    depends_on:
+      - zookeeper
+    ports:
+      - 9092:9092
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -21,81 +22,87 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-  mysql: 
-    image: mysql:8.3.0 
-    container_name: mysql-8.3.0 
-    restart: always 
-    environment: 
-      MYSQL_USER: test  
-      MYSQL_ROOT_USER: root 
-      MYSQL_PASSWORD: test
-      MYSQL_ROOT_PASSWORD: root 
-    ports: 
-      - '3306:3306' 
-    expose: 
+
+  mysql:
+    image: mysql:8.3.0
+    container_name: mysql-8.3.0
+    restart: always
+    environment:
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_ROOT_USER: ${MYSQL_ROOT_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - '3306:3306'
+    expose:
       - '3306'
     volumes:
-      - mysql-db:/var/lib/mysql  
+      - mysql-db:/var/lib/mysql
+
   authservice:
     image: authservice
     container_name: authservice
-    ports: 
+    ports:
       - '8081:8081'
-    environment: 
-      DBUSERNAME: root
-      DBPASSWORD: root
-      JWT_SECRET: 57a45e723e138f5d8a999059303c4b7f49991a7dd203a2a3f2e6f1f58068ae6a96d1dcecde067d1895b8ff566a12442843ab428b1100e9ca762336579b56b0d8b3d0c3887b3bb118ed1c6ce5fcddf0cb0dacd7d187218c237955f8db9ef248b5ce7de3cfbc85927f63a926f4f2c0fdd6c967d6dce0fa9cf343d2c18a20e09e5d68da523a58544e92ca781be174ad933595bc109af3eb96228b5c88954e9f1cf8e55be2c365904486bfe29e357f8a8bf3918693ab2d09100c22b18963cbae95acc6964b7e371ce94c0b2e46d14a2821929391a7af08850fc94e8a3273f77394ebf0f23c46d4adcfff44dc836ba99c64122dd143efcdc035e7f3733cd153d41254
-      KAFKA_HOST: kafka
-      KAFKA_PORT: 9092
-      MYSQL_HOST: mysql
-      MYSQL_PORT: 3306
+    environment:
+      DBUSERNAME: ${DBUSERNAME}
+      DBPASSWORD: ${DBPASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      KAFKA_HOST: ${KAFKA_HOST}
+      KAFKA_PORT: ${KAFKA_PORT}
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_PORT: ${MYSQL_PORT}
     depends_on:
       - kafka
-      - mysql 
+      - mysql
+
   userservice:
     image: userservice
     container_name: userservice
-    ports: 
+    ports:
       - '8082:8082'
-    environment: 
-      DBUSERNAME: root
-      DBPASSWORD: root
-      KAFKA_HOST: kafka
-      KAFKA_PORT: 9092
-      MYSQL_HOST: mysql
-      MYSQL_PORT: 3306
+    environment:
+      DBUSERNAME: ${DBUSERNAME}
+      DBPASSWORD: ${DBPASSWORD}
+      KAFKA_HOST: ${KAFKA_HOST}
+      KAFKA_PORT: ${KAFKA_PORT}
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_PORT: ${MYSQL_PORT}
     depends_on:
       - kafka
       - mysql
       - authservice
+
   dataextractionservice:
     image: dataextractionservice
     container_name: dataextractionservice
-    ports: 
+    ports:
       - '8083:8083'
-    environment: 
-      DBUSERNAME: root
-      DBPASSWORD: root
-      KAFKA_HOST: kafka
-      KAFKA_PORT: 9092
-      LLM_API_KEY: JYrTK7BwuAMEtmwwYOOs3ldfazvF99cu
+    environment:
+      DBUSERNAME: ${DBUSERNAME}
+      DBPASSWORD: ${DBPASSWORD}
+      KAFKA_HOST: ${KAFKA_HOST}
+      KAFKA_PORT: ${KAFKA_PORT}
+      LLM_API_KEY: ${LLM_API_KEY}
     depends_on:
       - kafka
+
   expenseservice:
     image: expenseservice
     container_name: expenseservice
-    ports: 
+    ports:
       - '8084:8084'
-    environment: 
-      DBUSERNAME: root
-      DBPASSWORD: root
-      KAFKA_HOST: kafka
-      KAFKA_PORT: 9092
-      MYSQL_HOST: mysql
-      MYSQL_PORT: 3306
+    environment:
+      DBUSERNAME: ${DBUSERNAME}
+      DBPASSWORD: ${DBPASSWORD}
+      KAFKA_HOST: ${KAFKA_HOST}
+      KAFKA_PORT: ${KAFKA_PORT}
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_PORT: ${MYSQL_PORT}
     depends_on:
       - kafka
       - mysql
-volumes: 
-  mysql-db: 
+
+volumes:
+  mysql-db:
     driver: local
