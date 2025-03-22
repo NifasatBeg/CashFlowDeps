@@ -29,7 +29,7 @@ services:
     routes:
       - name: data-extraction-route
         paths:
-          - /analyse/v1/
+          - /extract/v1/
         strip_path: false
         preserve_host: false
     plugins:
