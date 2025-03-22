@@ -47,7 +47,7 @@ services:
     environment:
       DBUSERNAME: ${DBUSERNAME}
       DBPASSWORD: ${DBPASSWORD}
-      JWT_SECRET: ${JWT_SECRET}
+      JWT_SECRET: 
       KAFKA_HOST: ${KAFKA_HOST}
       KAFKA_PORT: ${KAFKA_PORT}
       MYSQL_HOST: ${MYSQL_HOST}
@@ -83,7 +83,7 @@ services:
       DBPASSWORD: ${DBPASSWORD}
       KAFKA_HOST: ${KAFKA_HOST}
       KAFKA_PORT: ${KAFKA_PORT}
-      LLM_API_KEY: ${LLM_API_KEY}
+      LLM_API_KEY: JYrTK7BwuAMEtmwwYOOs3ldfazvF99
     depends_on:
       - kafka
 
