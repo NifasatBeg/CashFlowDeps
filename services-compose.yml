@@ -83,7 +83,7 @@ services:
       DBPASSWORD: ${DBPASSWORD}
       KAFKA_HOST: ${KAFKA_HOST}
       KAFKA_PORT: ${KAFKA_PORT}
-      LLM_API_KEY: JYrTK7BwuAMEtmwwYOOs3ldfazvF99
+      LLM_API_KEY: ${LLM_API_KEY}
     depends_on:
       - kafka
 
